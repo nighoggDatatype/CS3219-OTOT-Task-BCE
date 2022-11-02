@@ -1,0 +1,27 @@
+{
+  "name": "cs3219-otot-task-bce",
+  "version": "1.0.0",
+  "description": "CS3219 OTOT Task B,C,E",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nighoggDatatype/CS3219-OTOT-Task-BCE.git"
+  },
+  "author": "Sherman Ho",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nighoggDatatype/CS3219-OTOT-Task-BCE/issues"
+  },
+  "homepage": "https://github.com/nighoggDatatype/CS3219-OTOT-Task-BCE#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
