@@ -18,13 +18,6 @@ export async function createShoppingCart(params) {
 export async function getShoppingCartById(id) {
   return ShoppingCartModel.findById(id).exec()
 }
-
-export async function performTransactionWithShoppingCart(callback) {
-  //TODO: Look at https://jira.mongodb.org/browse/NODE-2014
-
-  //TODO: Figure this out
-  // const session = await db.startSession()
-  // const callbackWithContext = async (ShoppingCartModel) => await callback()
-  // session.withTransaction(/* TODO */)
-  // session.endSession()
+export async function deleteShoppingCartById(id) {
+  return ShoppingCartModel.deleteOne({ _id: {$eq: id} })
 }
