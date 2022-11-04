@@ -1,9 +1,14 @@
 import { createShoppingCart, putLineItemInShoppingCart, getShoppingCart, deleteShoppingCart } from "./controller/shoppingCart-controller.js"
 import express from "express";
+import cors from 'cors'
 
 let app = express();// Setup server port
+
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
+app.use(cors()) // config cors so that front-end can use
+app.options('*', cors())
 
 var port = process.env.PORT || 8080;// Send message for default URL
 
