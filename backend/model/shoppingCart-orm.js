@@ -16,7 +16,7 @@ export async function ormCreateShoppingCart(username) {
 }
 export async function ormPutLineItem(id, item, cost, qty) {
     try {
-        const cart =  await getShoppingCartById(id)
+        const cart = await getShoppingCartById(id, false)
         if (qty > 0) {
             cart.contents.set(item, {centCost: cost, qty: qty})
         } else {
@@ -30,6 +30,22 @@ export async function ormPutLineItem(id, item, cost, qty) {
     }
 }
 export async function ormGetShoppingCart(id) {
-    return await getShoppingCartById(id);
+    try {
+        const cart = await getShoppingCartById(id, true);
+
+        if (!cart) {
+            return cart
+        }
+        
+        delete cart.__v
+        for (const key in cart.contents) {
+            delete cart.contents[key]._id
+        }
+
+        return cart
+    } catch (err) {
+        console.log('ERROR: Could not get shopping cart');
+        return { err };
+    }
 }
 

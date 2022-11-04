@@ -1,4 +1,4 @@
-import { ormCreateShoppingCart, ormPutLineItem } from "../model/shoppingCart-orm.js"
+import { ormCreateShoppingCart, ormPutLineItem, ormGetShoppingCart } from "../model/shoppingCart-orm.js"
 
 export async function createShoppingCart(req, res) {
     try {
@@ -31,10 +31,10 @@ export async function createShoppingCart(req, res) {
     }
 }
 export async function putLineItemInShoppingCart(req, res) {
-  const id = req.params.id //TODO: Check this
+  const id = req.params.id
   const { item, cost, qty } = req.body
   if ( !(id) ) {
-    return res.status(400).json({ message: 'Card ID is missing!' })
+    return res.status(400).json({ message: 'Cart ID is missing!' })
   }
   if ( !(item) ) {
     return res.status(400).json({ message: 'Item name is missing!' })
@@ -60,6 +60,33 @@ export async function putLineItemInShoppingCart(req, res) {
         .json({ 
             message: `Added new line item successfully!`
         })
+    }
+  } catch (err) {
+    console.log(err)
+    return res
+      .status(500)
+      .json({ message: 'Database failure when creating new user!' })
+  }
+}
+export async function getShoppingCart(req, res) {
+  const id = req.params.id
+  if ( !(id) ) {
+    return res.status(400).json({ message: 'Cart ID is missing!' })
+  }
+  try {
+    const resp = await ormGetShoppingCart(id)
+    
+    if (resp === null) {
+      return res.status(404).json({ message: `Cart with id ${id} does not exist!`})
+    }
+
+    if (resp.err) {
+      return res.status(400).json({ message: 'Could not get shopping cart!' })
+    } else {
+      console.log(`Retrieved shopping cart successfully!`)
+      return res
+        .status(200)
+        .json(resp)
     }
   } catch (err) {
     console.log(err)

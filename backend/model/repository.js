@@ -15,8 +15,9 @@ export async function createShoppingCart(params) {
   return new ShoppingCartModel(params)
 }
 
-export async function getShoppingCartById(id) {
-  return ShoppingCartModel.findById(id).exec()
+export async function getShoppingCartById(id, isPlain) {
+  const query = ShoppingCartModel.findById(id)
+  return  query.lean(isPlain).exec()
 }
 export async function deleteShoppingCartById(id) {
   return ShoppingCartModel.deleteOne({ _id: {$eq: id} })
