@@ -53,14 +53,17 @@ export async function putLineItemInShoppingCart(req, res) {
 
     if (resp.err) {
       return res.status(400).json({ message: 'Could not put a new line item!' })
-    } else {
-      console.log(`Added new line item successfully!`)
-      return res
-        .status(200)
-        .json({ 
-            message: `Added new line item successfully!`
-        })
+    } 
+    if (!resp) {
+      return res.status(404).json({ message: `Cart with id ${id} does not exist!`})
     }
+
+    console.log(`Added new line item successfully!`)
+    return res
+      .status(200)
+      .json({ 
+          message: `Added new line item successfully!`
+      })
   } catch (err) {
     console.log(err)
     return res

@@ -17,6 +17,9 @@ export async function ormCreateShoppingCart(username) {
 export async function ormPutLineItem(id, item, cost, qty) {
     try {
         const cart = await getShoppingCartById(id, false)
+        if (!cart) {
+            return false;
+        }
         if (qty > 0) {
             cart.contents.set(item, {centCost: cost, qty: qty})
         } else {
