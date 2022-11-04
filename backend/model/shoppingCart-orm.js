@@ -7,7 +7,7 @@ export async function ormCreateShoppingCart(username) {
             username: username, 
             //TODO: Add stuff here
         });
-        newUser.save();
+        await newUser.save();
         return newUser;
     } catch (err) {
         console.log('ERROR: Could not create new pending match'); 
@@ -25,7 +25,7 @@ export async function ormPutLineItem(id, item, cost, qty) {
         } else {
             cart.contents.delete(item)
         }
-        cart.save()
+        await cart.save()
         return true;
     } catch (err) {
         console.log('ERROR: Could not put line item');
