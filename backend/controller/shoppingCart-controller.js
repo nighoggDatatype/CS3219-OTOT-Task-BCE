@@ -1,4 +1,4 @@
-import { ormCreateShoppingCart, ormPutLineItem, ormGetShoppingCart } from "../model/shoppingCart-orm.js"
+import { ormCreateShoppingCart, ormPutLineItem, ormGetShoppingCart, ormDeleteShoppingCart } from "../model/shoppingCart-orm.js"
 
 export async function createShoppingCart(req, res) {
     try {
@@ -27,7 +27,7 @@ export async function createShoppingCart(req, res) {
       console.log(err)
       return res
         .status(500)
-        .json({ message: 'Database failure when creating new user!' })
+        .json({ message: 'Database failure when creating new cart!' })
     }
 }
 export async function putLineItemInShoppingCart(req, res) {
@@ -68,7 +68,7 @@ export async function putLineItemInShoppingCart(req, res) {
     console.log(err)
     return res
       .status(500)
-      .json({ message: 'Database failure when creating new user!' })
+      .json({ message: 'Database failure when modifing cart!' })
   }
 }
 export async function getShoppingCart(req, res) {
@@ -95,6 +95,29 @@ export async function getShoppingCart(req, res) {
     console.log(err)
     return res
       .status(500)
-      .json({ message: 'Database failure when creating new user!' })
+      .json({ message: 'Database failure when finding cart!' })
+  }
+}
+export async function deleteShoppingCart (req, res) {
+  const id = req.params.id
+  if ( !(id) ) {
+    return res.status(400).json({ message: 'Cart ID is missing!' })
+  }
+  try {
+    const resp = await ormDeleteShoppingCart(id)
+
+    if (resp.err) {
+      return res.status(400).json({ message: 'Could not delete shopping cart!' })
+    } else {
+      console.log(`Deleted shopping cart successfully!`)
+      return res
+        .status(200)
+        .json({ message: 'Deleted shopping cart successfully!' })
+    }
+  } catch (err) {
+    console.log(err)
+    return res
+      .status(500)
+      .json({ message: 'Database failure when deleting cart!' })
   }
 }

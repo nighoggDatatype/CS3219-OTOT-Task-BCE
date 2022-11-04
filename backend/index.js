@@ -1,4 +1,4 @@
-import { createShoppingCart, putLineItemInShoppingCart, getShoppingCart } from "./controller/shoppingCart-controller.js"
+import { createShoppingCart, putLineItemInShoppingCart, getShoppingCart, deleteShoppingCart } from "./controller/shoppingCart-controller.js"
 import express from "express";
 
 let app = express();// Setup server port
@@ -12,6 +12,7 @@ app.get('/', (req, res) => res.send('Hello World with Express'));// Launch app t
 app.post('/api/v1/shoppingCart', createShoppingCart)
 app.put('/api/v1/shoppingCart/:id', putLineItemInShoppingCart)
 app.get('/api/v1/shoppingCart/:id', getShoppingCart)
+app.delete('/api/v1/shoppingCart/:id', deleteShoppingCart)
 
 
 app.listen(port, function () {

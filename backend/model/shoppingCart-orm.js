@@ -1,4 +1,4 @@
-import { createShoppingCart, getShoppingCartById } from './repository.js';
+import { createShoppingCart, deleteShoppingCartById, getShoppingCartById } from './repository.js';
 
 //need to separate orm functions from repository to decouple business logic from persistence
 export async function ormCreateShoppingCart(username) {
@@ -51,4 +51,12 @@ export async function ormGetShoppingCart(id) {
         return { err };
     }
 }
-
+export async function ormDeleteShoppingCart(id) {
+    try {
+        const cart = await deleteShoppingCartById(id);
+        return true;
+    } catch (err) {
+        console.log('ERROR: Could not get shopping cart');
+        return { err };
+    }
+}
