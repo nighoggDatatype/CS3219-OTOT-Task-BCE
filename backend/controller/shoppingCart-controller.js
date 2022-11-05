@@ -34,18 +34,23 @@ export async function putLineItemInShoppingCart(req, res) {
   const id = req.params.id
   const { item, cost, qty } = req.body
   if ( !(id) ) {
+    console.log('Cart ID is missing!')
     return res.status(400).json({ message: 'Cart ID is missing!' })
   }
   if ( !(item) ) {
+    console.log('Item name is missing!')
     return res.status(400).json({ message: 'Item name is missing!' })
   }
-  if ( !(qty) || !Number.isInteger(qty)) {
+  if ( !Number.isInteger(qty) ) {
+    console.log('Item qty is missing!')
     return res.status(400).json({ message: 'Item qty is missing!' })
   }
   if ( qty < 0 ) {
+    console.log('Item qty cannot be negative!')
     return res.status(400).json({ message: 'Item qty cannot be negative!' })
   }
   if ( qty > 0 && (!Number.isInteger(cost) || cost <= 0) ) {
+    console.log('Must have postive cost if qty is positve!')
     return res.status(400).json({ message: 'Must have postive cost if qty is positve!' })
   }
   try {
@@ -58,11 +63,11 @@ export async function putLineItemInShoppingCart(req, res) {
       return res.status(404).json({ message: `Cart with id ${id} does not exist!`})
     }
 
-    console.log(`Added new line item successfully!`)
+    console.log(`Added/Modified line item successfully!`)
     return res
       .status(200)
       .json({ 
-          message: `Added new line item successfully!`
+          message: `Added/Modified line item successfully!`
       })
   } catch (err) {
     console.log(err)
