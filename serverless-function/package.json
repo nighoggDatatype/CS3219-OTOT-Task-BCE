@@ -1,0 +1,15 @@
+{
+  "name": "serverless-function",
+  "version": "1.0.0",
+  "description": "Serverless Function for Google Cloud",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sherman Ho",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.1.2",
+    "axios": "^1.1.3"
+  }
+}
