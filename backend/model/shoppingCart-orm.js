@@ -4,8 +4,7 @@ import { createShoppingCart, deleteShoppingCartById, getShoppingCartById } from 
 export async function ormCreateShoppingCart(username) {
     try {
         const newUser = await createShoppingCart({
-            username: username, 
-            //TODO: Add stuff here
+            username: username,
         });
         await newUser.save();
         return newUser;

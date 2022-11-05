@@ -23,7 +23,6 @@ let ShoppingCartModelSchema = new Schema({
         of: LineEntrySchema,
         default: {}
     }
-    //TODO: Add list here
 })
 
 export default mongoose.model('ShoppingCartModel', ShoppingCartModelSchema)
