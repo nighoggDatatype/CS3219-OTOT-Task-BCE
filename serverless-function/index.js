@@ -4,6 +4,16 @@ const axios = require('axios');
 const roundCents = (rawPrice) => Math.round((rawPrice + Number.EPSILON) * 100) / 100
 
 functions.http('serverlessFunction', async (req, res) => {
+    //Begin CORS handling
+    res.set('Access-Control-Allow-Origin', "*")
+    res.set('Access-Control-Allow-Methods', 'GET');
+  
+    if (req.method === "OPTIONS") {
+      // stop preflight requests here
+      res.status(204).send('');
+      return;
+    }
+    //End CORS handling
     if (req.method == 'GET') {
         const amount = (req.query.totalCents ?? 100)/100
         const xchange = await axios.get("https://api.exchangerate.host/latest?base=SGD&symbols=USD,EUR,JPY,BTC")
