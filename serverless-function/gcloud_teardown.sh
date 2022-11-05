@@ -1,1 +1,1 @@
-gcloud functions delete nodejs-http-function --region=southeast1 --gen2
+gcloud functions delete nodejs-http-function --region=asia-southeast1 --gen2
