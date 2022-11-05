@@ -1,27 +1,29 @@
 import { ormCreateShoppingCart, ormPutLineItem, ormGetShoppingCart, ormDeleteShoppingCart } from "../model/shoppingCart-orm.js"
 
 export async function createShoppingCart(req, res) {
+    const { username } = req.body
+    if (!username) {
+      return res.status(400).json({ message: 'Username is missing!' })
+    }
+    if (!(typeof username === 'string' || username instanceof String)) {
+      return res.status(400).json({ message: 'Username must be a string!' })
+    }
+    if (username.trim().length === 0) {
+      return res.status(400).json({ message: 'Username must contain non-whitespace characters!' })
+    }
     try {
-      const { username } = req.body
-      if (username) {
-  
-        const resp = await ormCreateShoppingCart(username)
-  
-        if (resp.err) {
-          return res.status(400).json({ message: 'Could not create a new cart!' })
-        } else {
-          console.log(`Created new cart with owner ${username} successfully!`)
-          return res
-            .status(201)
-            .json({ 
-                message: `Created new cart with owner ${username} successfully!`, 
-                id: resp._id.toHexString()
-            })
-        }
+      const resp = await ormCreateShoppingCart(username)
+
+      if (resp.err) {
+        return res.status(400).json({ message: 'Could not create a new cart!' })
       } else {
+        console.log(`Created new cart with owner ${username} successfully!`)
         return res
-          .status(400)
-          .json({ message: 'Username is missing!' })
+          .status(201)
+          .json({ 
+              message: `Created new cart with owner ${username} successfully!`, 
+              id: resp._id.toHexString()
+          })
       }
     } catch (err) {
       console.log(err)
