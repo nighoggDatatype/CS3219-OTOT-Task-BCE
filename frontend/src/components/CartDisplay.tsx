@@ -19,7 +19,12 @@ const NullCart:Cart = {"username": "", "contents": {}}
 
 function CartDisplay({id, wipeId}:{id:String, wipeId:()=>void}) {
   const [cart , setCart]= useState(NullCart);
-  const [fresh, setFresh] = useState(false)
+  const [fresh, setFresh] = useState(false);
+  const nullServerless = "Loading..."
+  const [serverlessResult, setServerlessResult] = useState(nullServerless)
+  
+  //TODO: Test serverless function
+  const serverlessURL = process.env.REACT_APP_SERVERLESS_URL 
 
   useEffect(() => {
     if (id && !fresh) {
@@ -28,9 +33,30 @@ function CartDisplay({id, wipeId}:{id:String, wipeId:()=>void}) {
           .then((res) => {
             if (res && res.status === 200) {
                 setCart(res.data)
+                setServerlessResult(nullServerless)
                 setFresh(true)
               }
           })
+    }
+    if (id && fresh && (serverlessResult == nullServerless)) {
+        const totalSum = Object.getOwnPropertyNames(cart.contents).map((key) => {
+          const {centCost, qty} = cart.contents[key]
+          return centCost * qty
+        }).reduce((prev,cur) => prev+cur, 0)
+        console.log(totalSum)
+        axios.get(`${serverlessURL}/?totalCents=${totalSum}`)
+          .then((res) => {
+          if (res && res.status === 200) {
+            return ["SGD","USD","EUR","JPY","BTC"]
+                  .map((key) => `${key}: ${res.data[key]}`)
+                  .reduce((prev, cur) => `${prev}, ${cur}`)
+          } else {
+            return `SGD: ${totalSum/100}, ...`
+          }
+        }).catch((_err) => `SGD: ${totalSum/100}, ...`)
+          .then((serverlessString) => {
+          setServerlessResult(serverlessString)
+        })
     }
   })
 
@@ -84,7 +110,7 @@ function CartDisplay({id, wipeId}:{id:String, wipeId:()=>void}) {
           className="mx-3">
           <Card.Body>
             <Card.Title>{`"${cart.username}"'s Shopping Cart`}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+            <Card.Subtitle className="mb-2 text-muted">{serverlessResult}</Card.Subtitle>
             <ListGroup variant="flush">
             {lineItems}
             </ListGroup>
