@@ -16,7 +16,7 @@ functions.http('serverlessFunction', async (req, res) => {
     //End CORS handling
     if (req.method == 'GET') {
         const amount = (req.query.totalCents ?? 100)/100
-        const xchange = await axios.get("https://api.exchangerate.host/latest?base=SGD&symbols=USD,EUR,JPY,BTC")
+        const xchange = await axios.get("https://api.exchangerate.host/latest?base=SGD&symbols=SGD,USD,EUR,JPY,BTC")
         if (xchange.data.success) {
             const rates = xchange.data.rates;
             const finalAmounts = {}
