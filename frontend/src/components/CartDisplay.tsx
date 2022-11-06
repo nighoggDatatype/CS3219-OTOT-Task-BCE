@@ -9,7 +9,7 @@ import axios from 'axios';
 import LineForm from './LineForm'
 import { Button } from 'react-bootstrap';
 
-type LineItemValue = {centCost:number, qty:number}
+type LineItemValue = {cost:number, qty:number}
 type Contents = {
   [LineItemName: string] : LineItemValue
 }
@@ -40,8 +40,8 @@ function CartDisplay({id, wipeId}:{id:String, wipeId:()=>void}) {
     }
     if (id && fresh && (serverlessResult == nullServerless)) {
         const totalSum = Object.getOwnPropertyNames(cart.contents).map((key) => {
-          const {centCost, qty} = cart.contents[key]
-          return centCost * qty
+          const {cost, qty} = cart.contents[key]
+          return cost * qty
         }).reduce((prev,cur) => prev+cur, 0)
         console.log(totalSum)
         axios.get(`${serverlessURL}/?totalCents=${totalSum}`)
@@ -63,7 +63,7 @@ function CartDisplay({id, wipeId}:{id:String, wipeId:()=>void}) {
   if (fresh) {
     const lineItems = 
       Object.getOwnPropertyNames(cart.contents).map((key) => {
-        const {centCost, qty} = cart.contents[key]
+        const {cost, qty} = cart.contents[key]
         const deleteItem = async (e:any) => {
           e.preventDefault()
           const putForm = {
@@ -82,7 +82,7 @@ function CartDisplay({id, wipeId}:{id:String, wipeId:()=>void}) {
             className="d-flex justify-content-between align-items-start">
             <div className="ms-2 me-auto">
               <div className="fw-bold">{key}</div>
-                {`$${centCost/100}`}
+                {`$${cost/100}`}
             </div>
             <div>
               <Badge bg="primary" pill>{qty}</Badge>

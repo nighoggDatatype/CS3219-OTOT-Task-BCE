@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 var Schema = mongoose.Schema
 let LineEntrySchema = new Schema({
-    centCost: { //Stored as SGD cents, not in SGD dollars nor in any other currency like Yen
+    cost: { //Stored as SGD cents, not in SGD dollars nor in any other currency like Yen
         type: Number,
         required: true,
         unique: false

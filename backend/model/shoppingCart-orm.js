@@ -20,7 +20,7 @@ export async function ormPutLineItem(id, item, cost, qty) {
             return false;
         }
         if (qty > 0) {
-            cart.contents.set(item, {centCost: cost, qty: qty})
+            cart.contents.set(item, {cost: cost, qty: qty})
         } else {
             cart.contents.delete(item)
         }
