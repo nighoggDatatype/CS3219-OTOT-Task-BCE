@@ -2,7 +2,7 @@ import { ormCreateShoppingCart, ormPutLineItem, ormGetShoppingCart, ormDeleteSho
 
 export async function createShoppingCart(req, res) {
     const { username } = req.body
-    if (!username) {
+    if (username == null) {
       return res.status(400).json({ message: 'Username is missing!' })
     }
     if (!(typeof username === 'string' || username instanceof String)) {
@@ -35,11 +35,11 @@ export async function createShoppingCart(req, res) {
 export async function putLineItemInShoppingCart(req, res) {
   const id = req.params.id
   const { item, cost, qty } = req.body
-  if ( !(id) ) {
+  if (id == null) {
     console.log('Cart ID is missing!')
     return res.status(400).json({ message: 'Cart ID is missing!' })
   }
-  if ( !(item) ) {
+  if (item == null) {
     console.log('Item name is missing!')
     return res.status(400).json({ message: 'Item name is missing!' })
   }
@@ -118,7 +118,7 @@ export async function deleteShoppingCart (req, res) {
     } else {
       console.log(`Deleted shopping cart successfully!`)
       return res
-        .status(200)
+        .status(200) //TODO: Replace this status code
         .json({ message: 'Deleted shopping cart successfully!' })
     }
   } catch (err) {
