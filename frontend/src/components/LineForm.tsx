@@ -21,7 +21,7 @@ function LineForm({id, setFresh}:{id:String, setFresh:Function}) {
     if (putForm.item.trim().length == 0) {
         return //Need non empty item name
     }
-    if (putForm.cost <= 0 && putForm.qty <= 0) {
+    if (putForm.cost <= 0 || putForm.qty <= 0) {
         return //Need positive values for cost and qty
     }
     const res = await axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`, putForm)
