@@ -23,3 +23,6 @@ app.delete('/api/v1/shoppingCart/:id', deleteShoppingCart)
 app.listen(port, function () {
      console.log("Running Backend Server on port " + port);
 });
+
+//Export app for testing
+export default app;
