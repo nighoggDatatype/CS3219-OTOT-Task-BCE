@@ -118,7 +118,7 @@ export async function deleteShoppingCart (req, res) {
     } else {
       console.log(`Deleted shopping cart successfully!`)
       return res
-        .status(200) //TODO: Replace this status code
+        .status(200) //We use 200 instead of 204 because we also send a emssage
         .json({ message: 'Deleted shopping cart successfully!' })
     }
   } catch (err) {
