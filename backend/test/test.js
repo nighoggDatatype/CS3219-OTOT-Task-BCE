@@ -55,7 +55,7 @@ describe('Backend API', function () {
         afterEach(async function () {
             if (id) {
                 const res = await axios.delete(`http://localhost:8080/api/v1/shoppingCart/${id}`)
-                if (!(res && res.status == 200)) { //TODO: Replace error code here
+                if (!(res && res.status == 200)) {
                     throw new Error("Unable to delete cart in cleanup")
                 }
             }
@@ -88,7 +88,7 @@ describe('Backend API', function () {
 
             after(async function () {
                 const res = await axios.delete(`http://localhost:8080/api/v1/shoppingCart/${id}`)
-                if (!(res && res.status == 200)) { //TODO: Replace error code here
+                if (!(res && res.status == 200)) {
                     throw new Error("Unable to delete cart in cleanup")
                 }
             });
