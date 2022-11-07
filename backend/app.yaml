@@ -1,0 +1,4 @@
+runtime: nodejs16 
+env_variables: #Including the CLOUD URI since credentials are already exposed in the group project
+  DB_CLOUD_URI: mongodb+srv://cs3219g46:Singapore123@cluster0.qvafn9d.mongodb.net/Sherman-OTOT-BCE?retryWrites=true&w=majority
+  ENV: PROD
