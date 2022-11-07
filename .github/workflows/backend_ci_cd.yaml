@@ -30,7 +30,7 @@ jobs:
           DB_LOCAL_URI: mongodb://localhost/shoppingDB
           ENV: DEV
   deploy:
-    permission: 
+    permissions: 
       contents: 'read'
     runs-on: ubuntu-latest
     steps:
