@@ -1,10 +1,9 @@
 import { expect } from 'chai'
 import axios from 'axios'
-import '../index.js'; //Ensure server has started
 
 const test_axios = axios.create({
     validateStatus: null //Leave validation to test case
-  });
+});
 
 describe('Backend API', function () {
     let validButNonExistantId = null

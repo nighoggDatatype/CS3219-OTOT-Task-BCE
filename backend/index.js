@@ -2,6 +2,9 @@ import { createShoppingCart, putLineItemInShoppingCart, getShoppingCart, deleteS
 import express from "express";
 import cors from 'cors'
 
+//Import for graceful disconnect
+import mongoose from 'mongoose';
+
 let app = express();// Setup server port
 
 app.use(express.urlencoded({ extended: true }))
@@ -20,9 +23,28 @@ app.get('/api/v1/shoppingCart/:id', getShoppingCart)
 app.delete('/api/v1/shoppingCart/:id', deleteShoppingCart)
 
 
-app.listen(port, function () {
+const server = app.listen(port, function () {
      console.log("Running Backend Server on port " + port);
 });
 
-//Export app for testing
-export default app;
+//Export server closer for testing
+export async function closeServer () {
+     console.log('Shutting down gracefully');
+     const mongooseClosePromise = mongoose.disconnect()
+     server.close(async () => {
+          console.log('Closed out express server connections');
+          try {
+               await mongooseClosePromise;
+               console.log('Mongoose connection also closed')
+          } catch {
+               console.log("Could not close mongoose connection gracefully, forcefully shutting down");
+          }
+          process.exit(0);
+          
+     });
+
+     setTimeout(() => {
+          console.error('Could not close connections in time, forcefully shutting down');
+          process.exit(1);
+     }, 10000);
+}
