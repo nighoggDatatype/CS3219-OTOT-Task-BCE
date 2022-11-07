@@ -43,17 +43,21 @@ export async function putLineItemInShoppingCart(req, res) {
     console.log('Item name is missing!')
     return res.status(400).json({ message: 'Item name is missing!' })
   }
+  if (item.trim().length === 0) {
+    console.log('Item name must have non-whitespace characters!')
+    return res.status(400).json({ message: 'Item name must have non-whitespace characters!' })
+  }
   if ( !Number.isInteger(qty) ) {
-    console.log('Item qty is missing!')
-    return res.status(400).json({ message: 'Item qty is missing!' })
+    console.log('Item qty is missing or non-integer!')
+    return res.status(400).json({ message: 'Item qty is missing or non-integer!' })
   }
   if ( qty < 0 ) {
     console.log('Item qty cannot be negative!')
     return res.status(400).json({ message: 'Item qty cannot be negative!' })
   }
   if ( qty > 0 && (!Number.isInteger(cost) || cost <= 0) ) {
-    console.log('Must have postive cost if qty is positve!')
-    return res.status(400).json({ message: 'Must have postive cost if qty is positve!' })
+    console.log('Must have postive integer cost if qty is positive!')
+    return res.status(400).json({ message: 'Must have postive integer cost if qty is positive!' })
   }
   try {
     const resp = await ormPutLineItem(id, item, cost, qty)
