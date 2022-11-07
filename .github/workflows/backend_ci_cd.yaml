@@ -39,6 +39,6 @@ jobs:
     - id: 'deploy'
       uses: 'google-github-actions/deploy-appengine@v0'
       with:
-        deliverables: ./backend/app.yaml
+        deliverables: app.yaml
     - id: 'display_url'
       run: 'echo "${{ steps.deploy.outputs.url }}"'
