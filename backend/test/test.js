@@ -82,8 +82,9 @@ describe('Backend API', function () {
                 expect(res).to.have.property('status',404)
             });
             it('should not work with invalid id format', async function () {
-                const res = await test_axios.get("http://localhost:8080/api/v1/shoppingCart/badIdFormat")
+                const res = await test_axios.get("http://localhost:8080/api/v1/shoppingCart/1234")
                 expect(res).to.have.property('status',400)
+                expect(res).to.have.nested.property('data.message', 'Could not get shopping cart!')
             });
             it('should not work with valid but non-existant id', async function () {
                 const res = await test_axios.get(`http://localhost:8080/api/v1/shoppingCart/${validButNonExistantId}`)
