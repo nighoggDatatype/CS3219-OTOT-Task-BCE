@@ -263,7 +263,7 @@ describe('Backend API', function () {
             context("and no line item is present", function () {
                 afterEach(async function () {
                     const stillGoodPutForm = {...goodPutForm, qty: 0, cost: undefined}
-                    const res = await test_axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`, stillGoodPutForm)
+                    const res = await axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`, stillGoodPutForm)
                     if (!(res && res.status == 200)) {
                         throw new Error("Unable to delete line item")
                     }
@@ -354,7 +354,7 @@ describe('Backend API', function () {
             })
             context("and a line item is already present", function () {
                 beforeEach(async function () {
-                    const res = await test_axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`, goodPutForm)
+                    const res = await axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`, goodPutForm)
                     if (!(res && res.status == 200)) {
                         throw new Error("Unable to add line item")
                     }
@@ -394,7 +394,7 @@ describe('Backend API', function () {
                 })
                 afterEach(async function () {
                     const stillGoodPutForm = {...goodPutForm, qty: 0, cost: undefined}
-                    const res = await test_axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`, stillGoodPutForm)
+                    const res = await axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`, stillGoodPutForm)
                     if (!(res && res.status == 200)) {
                         throw new Error("Unable to delete line item")
                     }
