@@ -30,6 +30,12 @@ describe('Backend API', function () {
             expect(res).to.have.nested.property('data.id');
             id = res.data.id
         });
+        it('should reject me if my username is a parameter', async function () {
+            const res = await test_axios.post("http://localhost:8080/api/v1/shoppingCart?username=Username",)
+            expect(res).to.have.property('status',400)
+            expect(res).to.have.nested.property('data.message','Username is missing!')
+            id = res.data.id
+        });
         it('should reject me with an empty username', async function () {
             const res = await test_axios.post("http://localhost:8080/api/v1/shoppingCart",
                                          {"username" : ''})
@@ -119,6 +125,10 @@ describe('Backend API', function () {
                     expect(res.data).to.have.property('username',"Normal Username")
                     expect(res.data).to.have.property('contents')
                         .that.is.an('object').that.is.empty;
+                });
+                it('should not work if the id is wrongly presented as an URL parameter', async function () {
+                    const res = await test_axios.get(`http://localhost:8080/api/v1/shoppingCart/?id=${id}`)
+                    expect(res).to.have.property('status',404)
                 });
             });
             context('and one line item is added exactly', function () {
@@ -244,7 +254,6 @@ describe('Backend API', function () {
                     throw new Error("Post failed in test setup!")
                 }
             });
-
             after(async function () {
                 const res = await axios.delete(`http://localhost:8080/api/v1/shoppingCart/${id}`)
                 if (!(res && res.status == 200)) {
@@ -258,6 +267,17 @@ describe('Backend API', function () {
                     if (!(res && res.status == 200)) {
                         throw new Error("Unable to delete line item")
                     }
+                })
+                it('should reject if the put body is wrongly encoded as url params', async function () {
+                    const unwantedQuery = `item=${goodPutForm.item}&cost=${goodPutForm.cost}&qty=${goodPutForm.qty}`
+                    const badURL = `http://localhost:8080/api/v1/shoppingCart/${id}?${unwantedQuery}`
+                    const res = await test_axios.put(badURL)
+                    expect(res).to.have.property('status',400)
+                    expect(res).to.have.nested.property('data.message',"Item name is missing!")
+                })
+                it('should reject if the id is wrongly encoded as url params', async function () {
+                    const res = await test_axios.put(`http://localhost:8080/api/v1/shoppingCart/?id=${id}`, goodPutForm)
+                    expect(res).to.have.property('status',404)
                 })
                 it("should reject if there is no put body", async function () {
                     const res = await test_axios.put(`http://localhost:8080/api/v1/shoppingCart/${id}`)
@@ -388,6 +408,14 @@ describe('Backend API', function () {
                 const res = await test_axios.delete(`http://localhost:8080/api/v1/shoppingCart/${validButNonExistantId}`)
                 expect(res).to.have.property('status',200)
                 expect(res).to.have.nested.property('data.message', "Deleted shopping cart successfully!")
+            })
+            it("should reject an id passed as a parameter", async function () {
+                const res = await test_axios.delete(`http://localhost:8080/api/v1/shoppingCart/?id=${validButNonExistantId}`)
+                expect(res).to.have.property('status',404)
+            })
+            it("should not work without an id", async function () {
+                const res = await test_axios.delete(`http://localhost:8080/api/v1/shoppingCart/`)
+                expect(res).to.have.property('status',404)
             })
         })
         context("With a cart present", function () {
