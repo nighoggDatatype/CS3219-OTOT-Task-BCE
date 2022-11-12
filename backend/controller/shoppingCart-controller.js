@@ -1,5 +1,14 @@
 import { ormCreateShoppingCart, ormPutLineItem, ormGetShoppingCart, ormDeleteShoppingCart } from "../model/shoppingCart-orm.js"
 
+//Import for Task E
+import 'dotenv/config'
+import { startRedis, cacheCart, invalidateCart, getCachedCart } from "../model/cache.js"
+if (process.env.TASK_E) {
+  await startRedis()
+}
+const TEST_CART_LINE_COUNT = 1_000
+
+
 export async function createShoppingCart(req, res) {
     const { username } = req.body
     if (username == null) {
@@ -70,6 +79,9 @@ export async function putLineItemInShoppingCart(req, res) {
     }
 
     console.log(`Added/Modified line item successfully!`)
+    if (process.env.TASK_E) {
+      await invalidateCart(id)
+    }
     return res
       .status(200)
       .json({ 
@@ -88,6 +100,16 @@ export async function getShoppingCart(req, res) {
     return res.status(400).json({ message: 'Cart ID is missing!' })
   }
   try {
+    if (process.env.TASK_E) {
+      const cache = await getCachedCart(id)
+      if (cache) {
+        console.log(`Retrieved shopping cart successfully!`)
+        return res
+          .status(200)
+          .json(cache)
+      }
+    }
+
     const resp = await ormGetShoppingCart(id)
     
     if (resp === null) {
@@ -98,6 +120,9 @@ export async function getShoppingCart(req, res) {
       return res.status(400).json({ message: 'Could not get shopping cart!' })
     } else {
       console.log(`Retrieved shopping cart successfully!`)
+      if (process.env.TASK_E) {
+        await cacheCart(id, resp)
+      }
       return res
         .status(200)
         .json(resp)
@@ -121,6 +146,9 @@ export async function deleteShoppingCart (req, res) {
       return res.status(400).json({ message: 'Could not delete shopping cart!' })
     } else {
       console.log(`Deleted shopping cart successfully!`)
+      if (process.env.TASK_E) {
+        await invalidateCart(id)
+      }
       return res
         .status(200) //We use 200 instead of 204 because we also send a emssage
         .json({ message: 'Deleted shopping cart successfully!' })
@@ -130,5 +158,61 @@ export async function deleteShoppingCart (req, res) {
     return res
       .status(500)
       .json({ message: 'Database failure when deleting cart!' })
+  }
+}
+export async function createTestCart(req, res) {
+  const { username } = req.body
+  if (username == null) {
+    return res.status(400).json({ message: 'Error' })
+  }
+  if (!(typeof username === 'string' || username instanceof String)) {
+    return res.status(400).json({ message: 'Error' })
+  }
+  if (username.trim().length === 0) {
+    return res.status(400).json({ message: 'Error' })
+  }
+  var cartID
+  try {
+    var resp = await ormCreateShoppingCart(username)
+
+    if (resp.err) {
+      return res.status(400).json({ message: 'Error' })
+    }
+
+    cartID = resp._id.toHexString()
+
+    const getRandomInt = (min, max) => {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    }
+    for (var i = 0; i < TEST_CART_LINE_COUNT; i++) {
+      
+      const item = `item_${i}`
+      const cost = getRandomInt(99,100_00)
+      const qty = getRandomInt(1,100)
+
+      resp = await ormPutLineItem(cartID, item, cost, qty)
+
+      if (resp.err || !resp) {
+        throw new Error("Error in creating line item")
+      }
+    }
+
+    return res
+      .status(201)
+      .json({ 
+          lineCount: TEST_CART_LINE_COUNT, 
+          id: cartID
+      })
+  } catch (err) {
+    console.log(err)
+
+    if (cartID) {
+      await ormDeleteShoppingCart(cartID)
+    }
+    return res
+      .status(500)
+      .json({ message: 'Database error!' })
   }
 }
